@@ -1,0 +1,32 @@
+version: '3.8'
+
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: Dockerfile.db
+    container_name: symphony_postgres
+    environment:
+      POSTGRES_DB: symphony
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+    ports:
+      - "5432:5432"
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+
+  postgrest:
+    image: postgrest/postgrest:latest
+    container_name: symphony_postgrest
+    depends_on:
+      - postgres
+    ports:
+      - "3002:3000"
+    environment:
+      PGRST_DB_URI: postgres://postgres:postgres@postgres:5432/symphony
+      PGRST_DB_SCHEMAS: public
+      PGRST_DB_ANON_ROLE: anon
+      PGRST_SERVER_PORT: 3000
+
+volumes:
+  pgdata:

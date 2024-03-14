@@ -1,0 +1,4 @@
+FROM postgres:latest
+COPY ./symphony/database/setup.sh /docker-entrypoint-initdb.d/setup.sh
+
+RUN chmod +x /docker-entrypoint-initdb.d/setup.sh
